@@ -1,4 +1,5 @@
 import os
+import sys
 
 from androguard import misc
 from androguard.core.analysis.analysis import Analysis, StringAnalysis
@@ -18,16 +19,15 @@ args = parser.parse_args()
 sess = misc.get_default_session()
 
 if args.session and os.path.exists(args.session):
-    print('load session from {} ...'.format(args.session))
+    print('load session from {} ...'.format(args.session), file=sys.stderr)
     sess = session.Load(args.session)
 
 a: APK
 d: DalvikVMFormat
 dx: Analysis
 
-
+print('[*] Analyse {} ...'.format(args.apk), file=sys.stderr)
 a, d, dx = AnalyzeAPK(args.apk, session=sess)
-
 
 find_http = []
 
@@ -39,9 +39,9 @@ exclude_domains = ['googleapis.com', 'crashlytics.com']
 
 def display(value, prefix=None):
     if prefix:
-        print(prefix + ':' + value)
+        print('[+] ' + prefix + ':' + value)
     else:
-        print(value)
+        print('[+] ' + value)
 
 
 for s in list(dx.get_strings()):
@@ -60,5 +60,5 @@ for s in list(dx.get_strings()):
                     break
 
 if args.session:
-    print('save session in {} ...'.format(args.session))
+    print('[*] save session in {} ...'.format(args.session))
     session.Save(sess, args.session)
