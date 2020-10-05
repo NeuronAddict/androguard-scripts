@@ -1,21 +1,33 @@
 import os
 
+from androguard import misc
 from androguard.core.analysis.analysis import Analysis, StringAnalysis
 from androguard.core.bytecodes.apk import APK
 from androguard.core.bytecodes.dvm import DalvikVMFormat
 from androguard.misc import AnalyzeAPK
+from androguard import session
 import argparse
 
 parser = argparse.ArgumentParser('find string in a apk')
 parser.add_argument('apk')
 parser.add_argument('--only-login', help='display only logins', action='store_true')
 parser.add_argument('--show-file', help='Add filename before url', action='store_true')
+parser.add_argument('--session', help='session file')
 args = parser.parse_args()
+
+sess = misc.get_default_session()
+
+if args.session and os.path.exists(args.session):
+    print('load session from {} ...'.format(args.session))
+    sess = session.Load(args.session)
 
 a: APK
 d: DalvikVMFormat
 dx: Analysis
-a, d, dx = AnalyzeAPK(args.apk)
+
+
+a, d, dx = AnalyzeAPK(args.apk, session=sess)
+
 
 find_http = []
 
@@ -46,3 +58,7 @@ for s in list(dx.get_strings()):
                 if t in s.get_value():
                     display(s.get_value(), os.path.basename(args.apk if args.show_file else None))
                     break
+
+if args.session:
+    print('save session in {} ...'.format(args.session))
+    session.Save(sess, args.session)
