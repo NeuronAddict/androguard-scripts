@@ -52,11 +52,11 @@ for s in list(dx.get_strings()):
         find_http.append(s.get_value())
 
         if not args.only_login:
-            display(s.get_value(), os.path.basename(args.apk if args.show_file else None))
+            display(s.get_value(), os.path.basename(args.apk) if args.show_file else None)
         else:
             for t in login_hints:
                 if t in s.get_value():
-                    display(s.get_value(), os.path.basename(args.apk if args.show_file else None))
+                    display(s.get_value(), os.path.basename(args.apk) if args.show_file else None)
                     break
 
 if args.session:
