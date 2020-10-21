@@ -32,7 +32,7 @@ a, d, dx = AnalyzeAPK(args.apk, session=sess)
 find_http = []
 
 
-login_hints = ['login', 'auth', 'token', 'cred']
+login_hints = ['login', 'auth', 'token', 'cred', 'session']
 
 exclude_domains = ['googleapis.com', 'crashlytics.com']
 
